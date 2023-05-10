@@ -5,4 +5,9 @@ edition = "2021"
 
 # See more keys and their definitions at https://doc.rust-lang.org/cargo/reference/manifest.html
 
-[dependencies]
+[target.'cfg(target_pointer_width = "64")'.dependencies]
+mcore64 = { path = "./64bit" } 
+
+[target.'cfg(target_pointer_width = "32")'.dependencies]
+mcore32 = { path = "./32bit"} 
+
