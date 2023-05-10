@@ -11,3 +11,10 @@ mcore64 = { path = "./64bit" }
 [target.'cfg(target_pointer_width = "32")'.dependencies]
 mcore32 = { path = "./32bit"} 
 
+[target.'cfg(target_pointer_width = "64")'.features]
+default = []
+std = ["mcore64/std"]
+
+[target.'cfg(target_pointer_width = "32")'.features]
+default = []
+std = ["mcore32/std"]
