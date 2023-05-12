@@ -32,7 +32,8 @@ pub const SPARSER: usize = 3;
 pub const SPARSE: usize = 4;
 pub const DENSE: usize = 5;
 
-#[derive(Copy, Clone)]
+use serde::{Deserialize, Serialize};
+#[derive(Deserialize, Serialize, Copy, Clone)]
 pub struct FP12 {
     a: FP4,
     b: FP4,
@@ -45,7 +46,7 @@ impl std::fmt::Debug for FP12 {
     fn fmt(&self, formatter: &mut std::fmt::Formatter) -> std::fmt::Result {
         write!(formatter, "{}", self.tostring())
     }
-}    
+}
 
 #[cfg(feature = "std")]
 impl std::fmt::Display for FP12 {
@@ -870,40 +871,40 @@ impl FP12 {
 
     /* convert from byte array to FP12 */
     pub fn frombytes(w: &[u8]) -> FP12 {
-        const MB:usize = 4*(big::MODBYTES as usize);
+        const MB: usize = 4 * (big::MODBYTES as usize);
         let mut t: [u8; MB] = [0; MB];
-	    for i in 0..MB {
-		    t[i]=w[i];
-	    }
-        let c=FP4::frombytes(&t);
-	    for i in 0..MB {
-		    t[i]=w[i+MB];
-	    }
-        let b=FP4::frombytes(&t);
-	    for i in 0..MB {
-		    t[i]=w[i+2*MB];
-	    }
-        let a=FP4::frombytes(&t);
-	    FP12::new_fp4s(&a,&b,&c)
+        for i in 0..MB {
+            t[i] = w[i];
+        }
+        let c = FP4::frombytes(&t);
+        for i in 0..MB {
+            t[i] = w[i + MB];
+        }
+        let b = FP4::frombytes(&t);
+        for i in 0..MB {
+            t[i] = w[i + 2 * MB];
+        }
+        let a = FP4::frombytes(&t);
+        FP12::new_fp4s(&a, &b, &c)
     }
 
     /* convert this to byte array */
     pub fn tobytes(&mut self, w: &mut [u8]) {
-        const MB:usize = 4*(big::MODBYTES as usize);
+        const MB: usize = 4 * (big::MODBYTES as usize);
         let mut t: [u8; MB] = [0; MB];
 
         self.c.tobytes(&mut t);
-	    for i in 0..MB { 
-		    w[i]=t[i];
-	    }
+        for i in 0..MB {
+            w[i] = t[i];
+        }
         self.b.tobytes(&mut t);
-	    for i in 0..MB {
-		    w[i+MB]=t[i];
-	    }
+        for i in 0..MB {
+            w[i + MB] = t[i];
+        }
         self.a.tobytes(&mut t);
-	    for i in 0..MB {
-		    w[i+2*MB]=t[i];
-	    }
+        for i in 0..MB {
+            w[i + 2 * MB] = t[i];
+        }
     }
 
     /* output to hex string */
@@ -917,9 +918,9 @@ impl FP12 {
         )
     }
 
-/* Note this is simple square and multiply, so not side-channel safe */
-/* But fast for final exponentiation where exponent is not a secret */
-/* return this^e */
+    /* Note this is simple square and multiply, so not side-channel safe */
+    /* But fast for final exponentiation where exponent is not a secret */
+    /* return this^e */
     pub fn pow(&self, e: &BIG) -> FP12 {
         let mut r = FP12::new_copy(self);
         r.norm();
