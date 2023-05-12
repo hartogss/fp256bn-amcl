@@ -13,7 +13,5 @@ mcore32 = { path = "./32bit"}
 
 [features]
 default = []
-
-std64 = ["mcore64/std"]
-std32 = ["mcore64/std"]
+std = ["mcore64/std", "mcore32/std"]
 
