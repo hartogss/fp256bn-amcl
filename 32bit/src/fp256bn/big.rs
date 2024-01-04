@@ -37,7 +37,7 @@ pub const NEXCESS: isize = 1 << ((arch::CHUNK) - BASEBITS - 1);
 pub const BIGBITS: usize = MODBYTES * 8;
 
 use serde::{Deserialize, Serialize};
-#[derive(Deserialize, Serialize, Copy, Clone)]
+#[derive(Deserialize, Serialize, Copy)]
 pub struct BIG {
     pub w: [Chunk; NLEN],
 }
